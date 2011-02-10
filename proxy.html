@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head><title></title></head>
+  <body>
+    <script type="text/javascript">
+switch(location.search.substr(1)){
+		case "lapon":
+			if( typeof parent.myframe.showLaps == 'function' )
+    		parent.myframe.showLaps();
+    	break;
+
+		case "lapoff":
+			if( typeof parent.myframe.hideLaps == 'function' )
+	    	parent.myframe.hideLaps();
+    	break;
+}
+    </script>
+  </body>
+</html>

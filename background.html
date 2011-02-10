@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <script>
+
+var gxparam =[];
+
+function fetchData(event,activityid) {
+// function fetchData(callback,activityid) {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function(data) {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 200) {
+      	if( gxparam[0] )
+        	gxparam[0]=JSON.parse(gxparam[0]); 
+        gxparam[99]=JSON.parse(xhr.responseText);
+        event.target.page.dispatchMessage("fetchDataResponse", gxparam);
+        // callback(gxparam);
+      } else {
+        event.target.page.dispatchMessage("fetchDataResponse", null);
+        // callback(null);
+      }
+    }
+  }
+
+	if( activityid )
+		gxparam[1]=activityid;
+	
+	var url = 'http://connect.garmin.com/proxy/activity-service-1.0/gpolyline/activity/'+gxparam[1]+'?full=true';
+	xhr.open('GET', url, true);
+	xhr.send();
+};
+
+// function onRequest(request, sender, callback) {
+//   if (request.action == 'fetchData') {
+//        fetchData(callback,request.activityid);
+//   }
+//   if (request.action == 'readData') {
+//        callback(gxparam);
+//   }
+//   if (request.action == 'storeParam') {
+//     gxparam[request.id]=request.param;
+//   } 
+// };
+// 
+// chrome.extension.onRequest.addListener(onRequest);
+safari.application.addEventListener('message', function(e) {
+  var request = e.message;
+  if ( e.name == 'fetchData' ) {
+       fetchData(e, request.activityid);
+  }
+  if ( e.name == 'readData' ) {
+       event.target.page.dispatchMessage("readDataResponse", gxparam);
+  }
+  if ( e.name == 'storeParam' ) {
+    gxparam[request.id]=request.param;
+  }
+});
+    </script>
+  </body>
+</html>
